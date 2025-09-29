@@ -10,4 +10,10 @@
         ariBinariaForm.Show()
         Me.Hide()
     End Sub
+
+    Private Sub Btn_Sistemas_Click(sender As Object, e As EventArgs) Handles Btn_Sistemas.Click
+        Dim sisBinarioForm As New Form1()
+        sisBinarioForm.Show()
+        Me.Hide()
+    End Sub
 End Class

@@ -27,6 +27,7 @@ Partial Class menu_principal
         Label2 = New Label()
         Btn_Aritmetica = New Button()
         Btn_Codigo = New Button()
+        Btn_Sistemas = New Button()
         SuspendLayout()
         ' 
         ' Label1
@@ -48,17 +49,17 @@ Partial Class menu_principal
         Label2.BackColor = Color.Transparent
         Label2.Font = New Font("Segoe UI", 14F)
         Label2.ForeColor = SystemColors.Control
-        Label2.Location = New Point(216, 111)
+        Label2.Location = New Point(215, 130)
         Label2.Name = "Label2"
-        Label2.Size = New Size(347, 32)
+        Label2.Size = New Size(352, 32)
         Label2.TabIndex = 1
-        Label2.Text = "Seleccione una de las opciones"
+        Label2.Text = "Seleccione una de las opciones:"
         Label2.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' Btn_Aritmetica
         ' 
         Btn_Aritmetica.Font = New Font("Segoe UI", 12F)
-        Btn_Aritmetica.Location = New Point(295, 198)
+        Btn_Aritmetica.Location = New Point(295, 232)
         Btn_Aritmetica.Name = "Btn_Aritmetica"
         Btn_Aritmetica.Size = New Size(197, 59)
         Btn_Aritmetica.TabIndex = 2
@@ -68,12 +69,22 @@ Partial Class menu_principal
         ' Btn_Codigo
         ' 
         Btn_Codigo.Font = New Font("Segoe UI", 12F)
-        Btn_Codigo.Location = New Point(295, 314)
+        Btn_Codigo.Location = New Point(542, 232)
         Btn_Codigo.Name = "Btn_Codigo"
         Btn_Codigo.Size = New Size(197, 59)
         Btn_Codigo.TabIndex = 3
-        Btn_Codigo.Text = "Código Binario"
+        Btn_Codigo.Text = "Códigos Binarios"
         Btn_Codigo.UseVisualStyleBackColor = True
+        ' 
+        ' Btn_Sistemas
+        ' 
+        Btn_Sistemas.Font = New Font("Segoe UI", 12F)
+        Btn_Sistemas.Location = New Point(50, 232)
+        Btn_Sistemas.Name = "Btn_Sistemas"
+        Btn_Sistemas.Size = New Size(197, 59)
+        Btn_Sistemas.TabIndex = 4
+        Btn_Sistemas.Text = "Sistemas Binarios"
+        Btn_Sistemas.UseVisualStyleBackColor = True
         ' 
         ' menu_principal
         ' 
@@ -81,6 +92,7 @@ Partial Class menu_principal
         AutoScaleMode = AutoScaleMode.Font
         BackgroundImage = CType(resources.GetObject("$this.BackgroundImage"), Image)
         ClientSize = New Size(800, 450)
+        Controls.Add(Btn_Sistemas)
         Controls.Add(Btn_Codigo)
         Controls.Add(Btn_Aritmetica)
         Controls.Add(Label2)
@@ -95,5 +107,6 @@ Partial Class menu_principal
     Friend WithEvents Label2 As Label
     Friend WithEvents Btn_Aritmetica As Button
     Friend WithEvents Btn_Codigo As Button
+    Friend WithEvents Btn_Sistemas As Button
 
 End Class
