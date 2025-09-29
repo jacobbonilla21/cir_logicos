@@ -29,17 +29,8 @@
     End Sub
 
     Private Sub Btn_VolverMenu_Click(sender As Object, e As EventArgs) Handles Btn_VolverMenu.Click
-        For Each form As Form In Application.OpenForms
-            If TypeOf form Is menu_principal Then
-                form.Show()
-                Me.Close()
-                Return
-            End If
-        Next
-
         Dim menuForm As New menu_principal()
         menuForm.Show()
-
         Me.Close()
     End Sub
 
@@ -75,28 +66,34 @@
         pasosGray.Clear()
         Dim gray As String = ""
 
-        pasosGray.Add($"Binario original: {binario}")
+        pasosGray.Add("Símbolo XOR: ⊕ → iguales = 0, diferentes = 1")
         pasosGray.Add("")
+        pasosGray.Add("Cálculos...")
+
+        'Cambiar al control normal
+        CambiarControlResultado("Gray")
 
         'El primer bit siempre es igual
         gray += binario(0)
-        pasosGray.Add($"Paso 1: Primer bit = {binario(0)}")
+        Dim posicion As Integer = binario.Length - 1
+        pasosGray.Add($"G{posicion} = B{posicion} = {binario(0)}")
 
-        'Para los bits restantes: Gray[i] = Binario[i-1] XOR Binario[i]
+        'Para los bits restantes
         For i As Integer = 1 To binario.Length - 1
             Dim bit1 As Integer = Integer.Parse(binario(i - 1).ToString())
             Dim bit2 As Integer = Integer.Parse(binario(i).ToString())
             Dim resultadoXOR As Integer = bit1 Xor bit2
 
             gray += resultadoXOR.ToString()
-            pasosGray.Add($"Paso {i + 1}: {bit1} ⊕ {bit2} = {resultadoXOR}")
+
+            posicion = binario.Length - 1 - i
+            Dim posicionAnterior = posicion + 1
+
+            pasosGray.Add($"G{posicion} = B{posicionAnterior} ⊕ B{posicion} = {bit1} ⊕ {bit2} = {resultadoXOR}")
         Next
 
-        pasosGray.Add("")
-        pasosGray.Add($"Código Gray: {gray}")
-
-        'Siempre mostrar los pasos
         TextBox_Pasos.Text = String.Join(vbCrLf, pasosGray)
+        TextBox_Resultado.Text = gray
 
         Return gray
     End Function
@@ -105,13 +102,13 @@
         pasosParidad.Clear()
         Dim contadorUnos As Integer = 0
 
+        'Cambiar al control con color
+        CambiarControlResultado("Paridad")
+
         'Determinar si es paridad par o impar
         Dim esParidadPar As Boolean = Radio_ParidadPar.Checked
-        Dim tipoParidad As String = If(esParidadPar, "Par", "Impar")
 
-        pasosParidad.Add($"Binario: {binario}")
-        pasosParidad.Add($"Tipo de paridad: {tipoParidad}")
-        pasosParidad.Add("Contando unos...")
+        pasosParidad.Add("Contando cantidad de unos (1)...")
 
         'Contar cantidad de unos
         For i As Integer = 0 To binario.Length - 1
@@ -132,27 +129,35 @@
         'Agregar el bit de paridad al inicio (MSB)
         Dim resultado As String = bitParidad & binario
 
-        pasosParidad.Add($"")
+        pasosParidad.Add("")
         pasosParidad.Add($"Total de unos: {contadorUnos}")
-        pasosParidad.Add($"{contadorUnos} Mod 2 = {contadorUnos Mod 2}")
+        pasosParidad.Add($"Bit de paridad: {bitParidad}")
 
-        If esParidadPar Then
-            pasosParidad.Add($"Paridad Par: bit = {(contadorUnos Mod 2)}")
-        Else
-            pasosParidad.Add($"Paridad Impar: bit = {If((contadorUnos Mod 2) = 0, 1, 0)}")
-        End If
-
-        pasosParidad.Add($"Bit de paridad (MSB): {bitParidad}")
-        pasosParidad.Add($"Resultado: {resultado}")
-
-        'Siempre mostrar los pasos
         TextBox_Pasos.Text = String.Join(vbCrLf, pasosParidad)
+
+        'Mostrar en RichTextBox con colores
+        MostrarResultadoConColor(bitParidad, binario)
 
         Return resultado
     End Function
 
+    Private Sub MostrarResultadoConColor(bitParidad As String, binario As String)
+        RichTextBox_Resultado.Clear()
+
+        'Bit de paridad en rojo
+        RichTextBox_Resultado.SelectionColor = Color.Red
+        RichTextBox_Resultado.AppendText(bitParidad)
+
+        'Binario en negro
+        RichTextBox_Resultado.SelectionColor = Color.Black
+        RichTextBox_Resultado.AppendText(binario)
+    End Sub
+
     Private Function ConvertirHamming(binario As String) As String
         pasosHamming.Clear()
+
+        'Cambiar al control con color
+        CambiarControlResultado("Hamming")
 
         'Para 4 bits de datos, necesitamos 3 bits de paridad (Hamming 7,4)
         Dim m As Integer = binario.Length
@@ -167,39 +172,37 @@
         Dim hamming(n) As Char
         Dim dataIndex As Integer = 0
 
-        pasosHamming.Add($"Datos: {binario} ({m} bits)")
-        pasosHamming.Add($"Bits de paridad necesarios: {r}")
-        pasosHamming.Add($"Longitud total: {n} bits")
-        pasosHamming.Add("")
+        'Mostrar información general en TextBox_InfoHamming
+        Dim infoGeneral As String = $"Bits de información: {binario} ({m} bits)" & vbCrLf &
+                               $"Bits de paridad necesarios: {r}" & vbCrLf &
+                               $"Longitud total: {n} bits"
 
-        'Colocar bits de datos
+        TextBox_InfoHamming.Text = infoGeneral
+
+        'Resto del código Hamming (colocar datos y calcular paridad)
+        'Paso 1: Colocar bits de datos en posiciones que no son potencia de 2
         For i As Integer = 1 To n
             If Not EsPotenciaDeDos(i) Then
                 hamming(i) = binario(dataIndex)
                 dataIndex += 1
-                pasosHamming.Add($"Posición {i}: Dato → {hamming(i)}")
             End If
         Next
 
-        'Calcular bits de paridad
+        'Paso 2: Calcular bits de paridad
         For i As Integer = 0 To r - 1
             Dim posParidad As Integer = CInt(Math.Pow(2, i))
             Dim paridad As Integer = 0
 
-            pasosHamming.Add($"")
-            pasosHamming.Add($"Calculando paridad P{i + 1} (posición {posParidad}):")
-
+            'Calcular XOR para los bits cubiertos por esta paridad
             For j As Integer = posParidad To n Step posParidad * 2
                 For k As Integer = j To Math.Min(j + posParidad - 1, n)
                     If k <= n AndAlso hamming(k) <> Nothing Then
                         paridad = paridad Xor Integer.Parse(hamming(k).ToString())
-                        pasosHamming.Add($"  Posición {k}: {hamming(k)} → Paridad temporal = {paridad}")
                     End If
                 Next
             Next
 
             hamming(posParidad) = paridad.ToString()(0)
-            pasosHamming.Add($"Paridad P{i + 1} = {paridad}")
         Next
 
         'Construir resultado final
@@ -208,18 +211,133 @@
             resultado += hamming(i)
         Next
 
-        pasosHamming.Add($"")
-        pasosHamming.Add($"Código Hamming: {resultado}")
+        'GENERAR LA TABLA VISUAL
+        GenerarTablaHamming(hamming, n, r)
 
-        'Siempre mostrar los pasos
-        TextBox_Pasos.Text = String.Join(vbCrLf, pasosHamming)
+        'Mostrar resultado final con colores
+        MostrarResultadoHamming(hamming, n)
 
         Return resultado
     End Function
 
+    Private Sub GenerarTablaHamming(hamming() As Char, n As Integer, r As Integer)
+        RichTextBox_Tabla.Clear()
+        RichTextBox_Tabla.Font = New Font("Courier New", 10)
+
+        'Fila 1: Posiciones (mejor alineación para 569px)
+        RichTextBox_Tabla.SelectionColor = Color.Black
+        RichTextBox_Tabla.AppendText("Posición:    ")
+        For i As Integer = 1 To n
+            RichTextBox_Tabla.AppendText($"{i}".PadLeft(4))
+        Next
+        RichTextBox_Tabla.AppendText(vbCrLf)
+
+        'Línea separadora
+        RichTextBox_Tabla.AppendText("────────────")
+        For i As Integer = 1 To n
+            RichTextBox_Tabla.AppendText("────")
+        Next
+        RichTextBox_Tabla.AppendText(vbCrLf)
+
+        'Fila 2: Bits info con X en rojo
+        RichTextBox_Tabla.AppendText("Bits info:   ")
+        For i As Integer = 1 To n
+            If EsPotenciaDeDos(i) Then
+                RichTextBox_Tabla.SelectionColor = Color.Red
+                RichTextBox_Tabla.AppendText(" X ".PadLeft(4))
+            Else
+                RichTextBox_Tabla.SelectionColor = Color.Black
+                RichTextBox_Tabla.AppendText($" {hamming(i)} ".PadLeft(4))
+            End If
+        Next
+        RichTextBox_Tabla.AppendText(vbCrLf & vbCrLf)
+
+        'Fila 3: P0 (1,3,5,7) - Primer bit en ROJO, resto en AZUL
+        RichTextBox_Tabla.SelectionColor = Color.Black
+        RichTextBox_Tabla.AppendText("P0 (1,3,5,7):")
+        For i As Integer = 1 To n
+            If i = 1 Or i = 3 Or i = 5 Or i = 7 Then
+                If i = 1 Then 'Primer bit de P0 en ROJO
+                    RichTextBox_Tabla.SelectionColor = Color.Red
+                Else 'Resto de bits en AZUL
+                    RichTextBox_Tabla.SelectionColor = Color.Blue
+                End If
+                RichTextBox_Tabla.AppendText($" {hamming(i)} ".PadLeft(4))
+            Else
+                RichTextBox_Tabla.SelectionColor = Color.Black
+                RichTextBox_Tabla.AppendText(" - ".PadLeft(4))
+            End If
+        Next
+        RichTextBox_Tabla.AppendText(vbCrLf)
+
+        'Fila 4: P1 (2,3,6,7) - Primer bit en ROJO, resto en VERDE
+        RichTextBox_Tabla.SelectionColor = Color.Black
+        RichTextBox_Tabla.AppendText("P1 (2,3,6,7):")
+        For i As Integer = 1 To n
+            If i = 2 Or i = 3 Or i = 6 Or i = 7 Then
+                If i = 2 Then 'Primer bit de P1 en ROJO
+                    RichTextBox_Tabla.SelectionColor = Color.Red
+                Else 'Resto de bits en VERDE
+                    RichTextBox_Tabla.SelectionColor = Color.Green
+                End If
+                RichTextBox_Tabla.AppendText($" {hamming(i)} ".PadLeft(4))
+            Else
+                RichTextBox_Tabla.SelectionColor = Color.Black
+                RichTextBox_Tabla.AppendText(" - ".PadLeft(4))
+            End If
+        Next
+        RichTextBox_Tabla.AppendText(vbCrLf)
+
+        'Fila 5: P2 (4,5,6,7) - Primer bit en ROJO, resto en PURPURA
+        RichTextBox_Tabla.SelectionColor = Color.Black
+        RichTextBox_Tabla.AppendText("P2 (4,5,6,7):")
+        For i As Integer = 1 To n
+            If i = 4 Or i = 5 Or i = 6 Or i = 7 Then
+                If i = 4 Then 'Primer bit de P2 en ROJO
+                    RichTextBox_Tabla.SelectionColor = Color.Red
+                Else 'Resto de bits en PURPURA
+                    RichTextBox_Tabla.SelectionColor = Color.Purple
+                End If
+                RichTextBox_Tabla.AppendText($" {hamming(i)} ".PadLeft(4))
+            Else
+                RichTextBox_Tabla.SelectionColor = Color.Black
+                RichTextBox_Tabla.AppendText(" - ".PadLeft(4))
+            End If
+        Next
+
+        'Leyenda
+        RichTextBox_Tabla.AppendText(vbCrLf & vbCrLf)
+        RichTextBox_Tabla.SelectionColor = Color.Red
+        RichTextBox_Tabla.AppendText("Rojo: Bits de paridad (posición y primer bit de cada grupo)")
+        RichTextBox_Tabla.AppendText(vbCrLf)
+        RichTextBox_Tabla.SelectionColor = Color.Blue
+        RichTextBox_Tabla.AppendText("Azul: Bits cubiertos por P0 (excepto primer bit)")
+        RichTextBox_Tabla.AppendText(vbCrLf)
+        RichTextBox_Tabla.SelectionColor = Color.Green
+        RichTextBox_Tabla.AppendText("Verde: Bits cubiertos por P1 (excepto primer bit)")
+        RichTextBox_Tabla.AppendText(vbCrLf)
+        RichTextBox_Tabla.SelectionColor = Color.Purple
+        RichTextBox_Tabla.AppendText("Púrpura: Bits cubiertos por P2 (excepto primer bit)")
+    End Sub
+
     Private Function EsPotenciaDeDos(n As Integer) As Boolean
         Return (n And (n - 1)) = 0 AndAlso n > 0
     End Function
+
+    Private Sub MostrarResultadoHamming(hamming() As Char, n As Integer)
+        RichTextBox_Resultado.Clear()
+
+        For i As Integer = 1 To n
+            If EsPotenciaDeDos(i) Then
+                'Bits de paridad en rojo
+                RichTextBox_Resultado.SelectionColor = Color.Red
+            Else
+                'Bits de datos en negro
+                RichTextBox_Resultado.SelectionColor = Color.Black
+            End If
+            RichTextBox_Resultado.AppendText(hamming(i))
+        Next
+    End Sub
 
     Private Sub Btn_Convertir_Click(sender As Object, e As EventArgs) Handles Btn_Convertir.Click
         'Validar entrada
@@ -257,19 +375,51 @@
 
         'ACTUALIZAR EL TOOLTIP con la información del código seleccionado
         ActualizarToolTip()
+
+        'CONFIGURAR EL CONTROL DE RESULTADO SEGÚN EL CÓDIGO
+        If Radio_Gray.Checked Then
+            CambiarControlResultado("Gray")
+        ElseIf Radio_Paridad.Checked Then
+            CambiarControlResultado("Paridad")
+        ElseIf Radio_Hamming.Checked Then
+            CambiarControlResultado("Hamming")
+        End If
     End Sub
 
     Private Sub LimpiarCampos()
         'Limpiar entrada
         TextBox_Entrada.Text = ""
 
-        'Limpiar resultado
+        'Limpiar ambos controles de resultado
         TextBox_Resultado.Text = ""
+        RichTextBox_Resultado.Clear()
 
         'Limpiar pasos y mostrar mensaje inicial
         TextBox_Pasos.Text = "Selecciona un tipo de código e ingresa un número binario para ver los pasos de conversión."
 
         'Dar foco al campo de entrada
         TextBox_Entrada.Focus()
+    End Sub
+
+    Private Sub CambiarControlResultado(tipoCodigo As String)
+        If tipoCodigo = "Gray" Then
+            TextBox_Resultado.Visible = True
+            RichTextBox_Resultado.Visible = False
+            RichTextBox_Tabla.Visible = False
+            TextBox_InfoHamming.Visible = False
+            TextBox_Pasos.Visible = True
+        ElseIf tipoCodigo = "Paridad" Then
+            TextBox_Resultado.Visible = False
+            RichTextBox_Resultado.Visible = True
+            RichTextBox_Tabla.Visible = False
+            TextBox_InfoHamming.Visible = False
+            TextBox_Pasos.Visible = True
+        ElseIf tipoCodigo = "Hamming" Then
+            TextBox_Resultado.Visible = False
+            RichTextBox_Resultado.Visible = True
+            RichTextBox_Tabla.Visible = True
+            TextBox_InfoHamming.Visible = True  'Mostrar info Hamming
+            TextBox_Pasos.Visible = False       'Ocultar pasos normales
+        End If
     End Sub
 End Class

@@ -37,6 +37,9 @@ Partial Class cod_binario
         TextBox_Entrada = New TextBox()
         Label2 = New Label()
         Group_Resultados = New GroupBox()
+        TextBox_InfoHamming = New TextBox()
+        RichTextBox_Tabla = New RichTextBox()
+        RichTextBox_Resultado = New RichTextBox()
         Label3 = New Label()
         TextBox_Pasos = New TextBox()
         TextBox_Resultado = New TextBox()
@@ -198,6 +201,9 @@ Partial Class cod_binario
         ' 
         ' Group_Resultados
         ' 
+        Group_Resultados.Controls.Add(TextBox_InfoHamming)
+        Group_Resultados.Controls.Add(RichTextBox_Tabla)
+        Group_Resultados.Controls.Add(RichTextBox_Resultado)
         Group_Resultados.Controls.Add(Label3)
         Group_Resultados.Controls.Add(TextBox_Pasos)
         Group_Resultados.Controls.Add(TextBox_Resultado)
@@ -209,6 +215,40 @@ Partial Class cod_binario
         Group_Resultados.TabIndex = 6
         Group_Resultados.TabStop = False
         Group_Resultados.Text = "Resultado"
+        ' 
+        ' TextBox_InfoHamming
+        ' 
+        TextBox_InfoHamming.Font = New Font("Segoe UI", 10F)
+        TextBox_InfoHamming.Location = New Point(252, 33)
+        TextBox_InfoHamming.Multiline = True
+        TextBox_InfoHamming.Name = "TextBox_InfoHamming"
+        TextBox_InfoHamming.ReadOnly = True
+        TextBox_InfoHamming.Size = New Size(338, 86)
+        TextBox_InfoHamming.TabIndex = 7
+        TextBox_InfoHamming.Visible = False
+        ' 
+        ' RichTextBox_Tabla
+        ' 
+        RichTextBox_Tabla.Font = New Font("Segoe UI", 10F)
+        RichTextBox_Tabla.Location = New Point(21, 125)
+        RichTextBox_Tabla.Name = "RichTextBox_Tabla"
+        RichTextBox_Tabla.ReadOnly = True
+        RichTextBox_Tabla.ScrollBars = RichTextBoxScrollBars.Vertical
+        RichTextBox_Tabla.Size = New Size(569, 172)
+        RichTextBox_Tabla.TabIndex = 6
+        RichTextBox_Tabla.Text = ""
+        ' 
+        ' RichTextBox_Resultado
+        ' 
+        RichTextBox_Resultado.BorderStyle = BorderStyle.FixedSingle
+        RichTextBox_Resultado.Font = New Font("Segoe UI", 12.0F)
+        RichTextBox_Resultado.Location = New Point(22, 41)
+        RichTextBox_Resultado.Name = "RichTextBox_Resultado"
+        RichTextBox_Resultado.ReadOnly = True
+        RichTextBox_Resultado.Size = New Size(184, 34)
+        RichTextBox_Resultado.TabIndex = 5
+        RichTextBox_Resultado.Text = ""
+        RichTextBox_Resultado.Visible = False
         ' 
         ' Label3
         ' 
@@ -236,9 +276,6 @@ Partial Class cod_binario
         TextBox_Resultado.ReadOnly = True
         TextBox_Resultado.Size = New Size(184, 34)
         TextBox_Resultado.TabIndex = 1
-        ' 
-        ' ToolTip1
-        ' 
         ' 
         ' cod_binario
         ' 
@@ -283,4 +320,7 @@ Partial Class cod_binario
     Friend WithEvents Radio_ParidadPar As RadioButton
     Friend WithEvents Label3 As Label
     Friend WithEvents ToolTip1 As ToolTip
+    Friend WithEvents RichTextBox_Resultado As RichTextBox
+    Friend WithEvents TextBox_InfoHamming As TextBox
+    Friend WithEvents RichTextBox_Tabla As RichTextBox
 End Class
