@@ -422,4 +422,8 @@
             TextBox_Pasos.Visible = False       'Ocultar pasos normales
         End If
     End Sub
+
+    Private Sub Btn_Salir_Click(sender As Object, e As EventArgs) Handles Btn_Salir.Click
+        End
+    End Sub
 End Class

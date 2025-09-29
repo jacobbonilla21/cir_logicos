@@ -44,6 +44,7 @@ Partial Class cod_binario
         TextBox_Pasos = New TextBox()
         TextBox_Resultado = New TextBox()
         ToolTip1 = New ToolTip(components)
+        Btn_Salir = New Button()
         GroupBox_Tipo.SuspendLayout()
         GroupBox_Paridad.SuspendLayout()
         Group_Conversion.SuspendLayout()
@@ -241,7 +242,7 @@ Partial Class cod_binario
         ' RichTextBox_Resultado
         ' 
         RichTextBox_Resultado.BorderStyle = BorderStyle.FixedSingle
-        RichTextBox_Resultado.Font = New Font("Segoe UI", 12.0F)
+        RichTextBox_Resultado.Font = New Font("Segoe UI", 12F)
         RichTextBox_Resultado.Location = New Point(22, 41)
         RichTextBox_Resultado.Name = "RichTextBox_Resultado"
         RichTextBox_Resultado.ReadOnly = True
@@ -277,12 +278,22 @@ Partial Class cod_binario
         TextBox_Resultado.Size = New Size(184, 34)
         TextBox_Resultado.TabIndex = 1
         ' 
+        ' Btn_Salir
+        ' 
+        Btn_Salir.Location = New Point(954, 12)
+        Btn_Salir.Name = "Btn_Salir"
+        Btn_Salir.Size = New Size(80, 34)
+        Btn_Salir.TabIndex = 7
+        Btn_Salir.Text = "Salir"
+        Btn_Salir.UseVisualStyleBackColor = True
+        ' 
         ' cod_binario
         ' 
         AutoScaleDimensions = New SizeF(8F, 20F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.FromArgb(CByte(64), CByte(64), CByte(64))
         ClientSize = New Size(1046, 588)
+        Controls.Add(Btn_Salir)
         Controls.Add(Group_Resultados)
         Controls.Add(Group_Conversion)
         Controls.Add(GroupBox_Tipo)
@@ -323,4 +334,5 @@ Partial Class cod_binario
     Friend WithEvents RichTextBox_Resultado As RichTextBox
     Friend WithEvents TextBox_InfoHamming As TextBox
     Friend WithEvents RichTextBox_Tabla As RichTextBox
+    Friend WithEvents Btn_Salir As Button
 End Class
